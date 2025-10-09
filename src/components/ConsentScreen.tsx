@@ -1,9 +1,9 @@
 'use client';
 
-import { FiCpu } from 'react-icons/fi';
+import { Cpu } from 'lucide-react';
 
 // Create a simple wrapper for the icon to satisfy TypeScript
-const ConsentIcon = () => <FiCpu className="mx-auto h-12 w-12 text-primary" />;
+const ConsentIcon = () => <Cpu className="mx-auto h-12 w-12 text-primary" />;
 
 interface ConsentScreenProps {
   onConsent: () => void;

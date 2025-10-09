@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { FiCpu } from 'react-icons/fi';
+import { Cpu } from 'lucide-react';
 import { StatsCards } from '@/components/StatsCards';
 import { InsightsCharts } from '@/components/InsightsCharts';
 import { Badge } from '@/components/Badge';
@@ -13,7 +13,7 @@ import { NavigationTabs } from '@/components/NavigationTabs';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 // Create a simple wrapper for the icon to satisfy TypeScript
-const CpuIcon = () => <FiCpu className="mr-2 h-5 w-5"/>;
+const CpuIcon = () => <Cpu className="mr-2 h-5 w-5"/>;
 
 // --- INTERFACES ---
 interface Message {
@@ -150,7 +150,7 @@ export default function ResultsPage() {
           disabled={isAnalyzing || interviews.length < 2}
           className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg shadow-sm hover:opacity-90 disabled:opacity-50"
         >
-          <FiCpu className="mr-2 h-5 w-5"/>
+          <Cpu className="mr-2 h-5 w-5"/>
           {isAnalyzing ? 'Finding Themes...' : 'Synthesize Themes'}
         </button>
       </div>

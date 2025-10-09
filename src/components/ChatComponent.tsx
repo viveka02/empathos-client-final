@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { FiMic, FiSend } from 'react-icons/fi';
+import { Mic, Send } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -231,14 +231,14 @@ export default function ChatComponent({ projectGoal, projectId }: ChatComponentP
               disabled={isAiResponding}
               className={`p-2 rounded-full transition-colors ${isListening ? 'bg-destructive text-destructive-foreground' : 'text-muted-foreground hover:bg-accent'}`}
             >
-              <FiMic className="h-5 w-5" />
+              <Mic className="h-5 w-5" />
             </button>
             <button 
               type="submit"
               disabled={isAiResponding || !input.trim()}
               className="p-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
             >
-              <FiSend className="h-5 w-5" />
+              <Send className="h-5 w-5" />
             </button>
           </div>
         </form>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
 import EditProjectModal from '@/components/EditProjectModal';
 import ProjectList from '@/components/ProjectList';
-import { FiPlus } from 'react-icons/fi';
+import { Plus } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -88,7 +88,7 @@ export default function Home() {
           <p className="mt-1 text-sm text-muted-foreground">Manage and track all your projects in one place</p>
         </div>
         <Link href="/projects/new" className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg shadow-sm hover:opacity-90">
-          <FiPlus className="-ml-1 mr-2 h-5 w-5" />
+          <Plus className="-ml-1 mr-2 h-5 w-5" />
           New Project
         </Link>
       </div>

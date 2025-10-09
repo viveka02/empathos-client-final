@@ -1,6 +1,6 @@
 'use client';
 
-import { FiThumbsUp, FiThumbsDown, FiArrowRight } from 'react-icons/fi';
+import { ThumbsUp, ThumbsDown, ArrowRight } from 'lucide-react';
 
 interface AISuggestionsProps {
   analysis: string | null;
@@ -27,7 +27,7 @@ export function AISuggestions({ analysis, loading, onAnalyze }: AISuggestionsPro
                   <span className="px-2 py-1 text-xs font-medium text-muted-foreground bg-gray-100 rounded-md">Analysis</span>
                 </div>
                 <button className="flex items-center text-sm font-semibold text-foreground hover:text-accent">
-                  View Details <FiArrowRight className="ml-2"/>
+                  View Details <ArrowRight className="ml-2"/>
                 </button>
               </div>
               <pre className="whitespace-pre-wrap font-sans text-sm text-foreground mt-4">{analysis}</pre>
@@ -36,8 +36,8 @@ export function AISuggestions({ analysis, loading, onAnalyze }: AISuggestionsPro
                       <strong>Impact:</strong> High &nbsp;&nbsp; <strong>Effort:</strong> Medium
                   </div>
                   <div className="flex space-x-2 text-muted">
-                      <button className="hover:text-primary"><FiThumbsUp /></button>
-                      <button className="hover:text-primary"><FiThumbsDown /></button>
+                      <button className="hover:text-primary"><ThumbsUp /></button>
+                      <button className="hover:text-primary"><ThumbsDown /></button>
                   </div>
               </div>
             </article>

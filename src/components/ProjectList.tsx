@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FiCopy, FiBarChart2, FiMoreVertical, FiEdit, FiTrash2, FiUsers } from 'react-icons/fi';
+import { Copy, BarChart2, MoreVertical, Edit, Trash2, Users } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"; // Import Shadcn Card components
 
@@ -25,10 +25,10 @@ const DropdownMenu = ({ onEdit, onDelete }: { onEdit: () => void; onDelete: () =
   <div className="absolute right-0 mt-2 w-48 origin-top-right bg-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
     <div className="py-1">
       <button onClick={onEdit} className="flex items-center w-full text-left px-4 py-2 text-sm text-foreground hover:bg-background">
-        <FiEdit className="mr-3 h-5 w-5 text-muted-foreground" /> Edit
+        <Edit className="mr-3 h-5 w-5 text-muted-foreground" /> Edit
       </button>
       <button onClick={onDelete} className="flex items-center w-full text-left px-4 py-2 text-sm text-destructive hover:bg-background">
-        <FiTrash2 className="mr-3 h-5 w-5" /> Delete
+        <Trash2 className="mr-3 h-5 w-5" /> Delete
       </button>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default function ProjectList({ projects, onEdit, onDelete }: ProjectListP
               <CardTitle className="text-lg font-bold text-foreground pr-4">{project.project_name}</CardTitle>
               <div className="relative" ref={openDropdownId === project.id ? dropdownRef : null}>
                 <button onClick={() => setOpenDropdownId(openDropdownId === project.id ? null : project.id)} className="text-muted-foreground hover:text-foreground">
-                  <FiMoreVertical />
+                  <MoreVertical />
                 </button>
                 {openDropdownId === project.id && (
                   <DropdownMenu 
@@ -93,16 +93,16 @@ export default function ProjectList({ projects, onEdit, onDelete }: ProjectListP
                 Active
             </span>
             <div className="flex items-center text-muted-foreground mt-4">
-                    <FiUsers className="mr-2"/>
+                    <Users className="mr-2"/>
                     <span className="text-sm font-semibold">{project.response_count} Responses</span>
             </div>
           </CardContent>
           <CardFooter className="flex items-center justify-around bg-slate-50">
              <Link href={`/results/${project.id}`} className="flex items-center text-sm font-semibold text-foreground hover:text-primary">
-                <FiBarChart2 className="mr-2" /> Insights
+                <BarChart2 className="mr-2" /> Insights
             </Link>
             <button onClick={() => handleCopyLink(project.interview_link)} className="flex items-center text-sm font-semibold text-foreground hover:text-primary">
-              <FiCopy className="mr-2" /> Copy Link
+              <Copy className="mr-2" /> Copy Link
             </button>
           </CardFooter>
         </Card>
