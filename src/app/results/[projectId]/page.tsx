@@ -12,6 +12,8 @@ import { ThematicAnalysisDisplay } from '@/components/ThematicAnalysisDisplay';
 import { NavigationTabs } from '@/components/NavigationTabs';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Create a simple wrapper for the icon to satisfy TypeScript
+const CpuIcon = () => <FiCpu className="mr-2 h-5 w-5"/>;
 
 // --- INTERFACES ---
 interface Message {

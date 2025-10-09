@@ -2,6 +2,9 @@
 
 import { FiCpu } from 'react-icons/fi';
 
+// Create a simple wrapper for the icon to satisfy TypeScript
+const ConsentIcon = () => <FiCpu className="mx-auto h-12 w-12 text-primary" />;
+
 interface ConsentScreenProps {
   onConsent: () => void;
 }
@@ -10,7 +13,7 @@ export function ConsentScreen({ onConsent }: ConsentScreenProps) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-background">
       <div className="w-full max-w-2xl p-8 bg-card border border-border rounded-lg shadow-md text-center">
-        <FiCpu className="mx-auto h-12 w-12 text-primary" />
+        <ConsentIcon />
         <h1 className="text-3xl font-bold mt-4 text-foreground">
           AI-Powered User Interview
         </h1>
