@@ -15,7 +15,7 @@ export function ConsentScreen({ onConsent }: ConsentScreenProps) {
           AI-Powered User Interview
         </h1>
         <div className="mt-6 text-left text-muted-foreground space-y-4">
-          <p>Welcome! You're about to participate in an automated user research session conducted by an AI.</p>
+          <p>Welcome! You are about to participate in an automated user research session conducted by an AI.</p>
           <ul className="list-disc list-inside space-y-2">
             <li>The session will be recorded for analysis by the research team.</li>
             <li>There are no right or wrong answers; we are interested in your honest feedback.</li>
