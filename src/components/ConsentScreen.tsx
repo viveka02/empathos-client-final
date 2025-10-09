@@ -11,7 +11,7 @@ interface ConsentScreenProps {
 
 export function ConsentScreen({ onConsent }: ConsentScreenProps) {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8 bg-background">
+    <main className="flex min-h-screen flex-col items-center justify-start pt-20 p-8 bg-background">
       <div className="w-full max-w-2xl p-8 bg-card border border-border rounded-lg shadow-md text-center">
         <ConsentIcon />
         <h1 className="text-3xl font-bold mt-4 text-foreground">
