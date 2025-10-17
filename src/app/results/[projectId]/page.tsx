@@ -9,6 +9,7 @@ import { StatsCards } from '@/components/StatsCards';
 import { InsightsCharts } from '@/components/InsightsCharts';
 import { Badge } from '@/components/Badge';
 import { ThematicAnalysisDisplay } from '@/components/ThematicAnalysisDisplay';
+import { NavigationTabs } from '@/components/NavigationTabs';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
@@ -137,9 +138,10 @@ export default function ResultsPage() {
   if (error) return <p className="text-center mt-24 text-destructive">{`Error: ${error}`}</p>;
 
   return (
-    <main>
-      <Link href="/dashboard" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Dashboard</Link>
-      <div className="flex justify-between items-center mb-8">
+    // This wrapper div restores the correct layout
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground mb-6 inline-block">&larr; Back to Dashboard</Link>
+      <div className="flex justify-between items-start mb-8">
         <div>
           <h1 className="text-3xl font-bold text-foreground">User Research Insights</h1>
           <p className="text-base text-muted-foreground mt-1">Track and analyze feedback from your user research sessions.</p>
@@ -154,16 +156,16 @@ export default function ResultsPage() {
         <section id="overview">
           <StatsCards totalInsights={insights.length} totalInterviews={interviews.length} />
         </section>
+        
+        <section id="charts">
+          <InsightsCharts categoryData={categoryCounts} sentimentData={sentimentCounts} />
+        </section>
 
         {thematicAnalysis && (
           <section id="themes">
             <ThematicAnalysisDisplay analysis={thematicAnalysis} />
           </section>
         )}
-        
-        <section id="charts">
-          <InsightsCharts categoryData={categoryCounts} sentimentData={sentimentCounts} />
-        </section>
         
         <section id="insights">
           <div className="bg-card border border-border rounded-lg shadow-sm">
@@ -251,6 +253,6 @@ export default function ResultsPage() {
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }
