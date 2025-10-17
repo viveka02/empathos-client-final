@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
-import { FiLogOut, FiChevronDown } from 'react-icons/fi';
+import { LogOut, ChevronDown } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -52,14 +52,14 @@ export default function Header() {
                 <div className="w-10 h-10 bg-card rounded-full flex items-center justify-center ring-2 ring-orange-400">
                   <span className="font-bold text-primary">{user.email?.charAt(0).toUpperCase()}</span>
                 </div>
-                <FiChevronDown className="w-5 h-5" />
+                <ChevronDown className="w-5 h-5" />
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 origin-top-right bg-card rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
                   <div className="py-1">
                     <Link href="/dashboard" className="block px-4 py-2 text-sm text-foreground hover:bg-background">Dashboard</Link>
                     <button onClick={handleLogout} className="flex items-center w-full text-left px-4 py-2 text-sm text-foreground hover:bg-background">
-                      <FiLogOut className="mr-3 h-5 w-5 text-muted" /> Log Out
+                      <LogOut className="mr-3 h-5 w-5 text-muted" /> Log Out
                     </button>
                   </div>
                 </div>
