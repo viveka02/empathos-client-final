@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ContactForm } from '@/components/ContactForm';
 import { Cpu, Beaker, BarChart2 } from 'lucide-react';
@@ -13,13 +12,25 @@ export default function HomePage() {
     <>
       <ContactForm open={isContactFormOpen} onOpenChange={setIsContactFormOpen} />
 
-      {/* Hero Section with Parallax Background */}
-      <section 
-        className="relative flex flex-col items-center justify-center text-center px-4 py-32 bg-cover bg-fixed bg-center"
-        style={{ backgroundImage: "url('/hero-background.jpg')" }} // Add a hero-background.jpg to your /public folder
-      >
-        <div className="absolute inset-0 bg-black/60" /> {/* Dark overlay */}
-        <div className="relative z-10 text-white">
+      {/* --- HERO SECTION WITH VIDEO BACKGROUND --- */}
+      <section className="relative flex flex-col items-center justify-center text-center h-[60vh] overflow-hidden">
+        {/* The video element */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/60 z-10" />
+
+        {/* Text content */}
+        <div className="relative z-20 text-white px-4">
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
             Unlock Actionable User Insights, Instantly.
           </h1>
