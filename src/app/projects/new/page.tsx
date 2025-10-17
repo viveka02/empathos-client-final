@@ -66,7 +66,7 @@ export default function NewProjectPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link href="/" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Projects</Link>
+        <Link href="/dashboard" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Projects</Link>
         <div className="p-8 bg-card border border-border rounded-lg shadow-md">
             <h1 className="text-3xl font-bold mb-6 text-foreground">Create a New Project</h1>
             <form onSubmit={handleSubmit} className="space-y-6">

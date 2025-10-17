@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { FiCpu } from 'react-icons/fi';
+import { Cpu } from 'lucide-react';
 import { StatsCards } from '@/components/StatsCards';
 import { InsightsCharts } from '@/components/InsightsCharts';
 import { Badge } from '@/components/Badge';
@@ -145,7 +145,7 @@ export default function ResultsPage() {
           <p className="text-base text-muted-foreground mt-1">Track and analyze feedback from your user research sessions.</p>
         </div>
         <Button onClick={handleThematicAnalysis} disabled={isAnalyzing || interviews.length < 1}>
-          <FiCpu className="mr-2 h-4 w-4"/>
+          <Cpu className="mr-2 h-4 w-4"/>
           {isAnalyzing ? 'Synthesizing...' : 'Synthesize Themes'}
         </Button>
       </div>
