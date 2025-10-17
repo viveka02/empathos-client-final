@@ -81,7 +81,8 @@ export default function Home() {
   if (loading) return <p className="text-center mt-24">Loading...</p>;
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    // Add this wrapper div with the layout classes
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Projects Dashboard</h1>
@@ -92,7 +93,7 @@ export default function Home() {
           New Project
         </Link>
       </div>
-      
+
       {error && <p className="text-center text-destructive mb-4">{`Error: ${error}`}</p>}
 
       <ProjectList 
@@ -109,6 +110,6 @@ export default function Home() {
           sessionToken={sessionToken}
         />
       )}
-    </main>
+    </div>
   );
 }
