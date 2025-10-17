@@ -4,16 +4,15 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabaseClient';
-import { Cpu } from 'lucide-react';
+import { FiCpu } from 'react-icons/fi';
 import { StatsCards } from '@/components/StatsCards';
 import { InsightsCharts } from '@/components/InsightsCharts';
 import { Badge } from '@/components/Badge';
 import { ThematicAnalysisDisplay } from '@/components/ThematicAnalysisDisplay';
-import { NavigationTabs } from '@/components/NavigationTabs';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-// Create a simple wrapper for the icon to satisfy TypeScript
-const CpuIcon = () => <Cpu className="mr-2 h-5 w-5"/>;
 
 // --- INTERFACES ---
 interface Message {
@@ -51,68 +50,63 @@ export default function ResultsPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [categoryCounts, setCategoryCounts] = useState<ChartData[]>([]);
   const [sentimentCounts, setSentimentCounts] = useState<ChartData[]>([]);
+  const [filters, setFilters] = useState({ category: '', sentiment: '', priority: '' });
+  const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1 });
 
-  // This is the corrected useEffect hook
   useEffect(() => {
-    const fetchAllData = async () => {
+    const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         router.push('/auth');
         return;
       }
-      
-      try {
-        setLoading(true);
-        setError(null);
-
-        const token = session.access_token;
-        const [interviewsRes, insightsRes, categoryRes, sentimentRes] = await Promise.all([
-          fetch(`${API_URL}/interviews/${projectId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${API_URL}/insights/${projectId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${API_URL}/insights/${projectId}/category-counts`, { headers: { 'Authorization': `Bearer ${token}` } }),
-          fetch(`${API_URL}/insights/${projectId}/sentiment-counts`, { headers: { 'Authorization': `Bearer ${token}` } })
-        ]);
-
-        if (!interviewsRes.ok || !insightsRes.ok || !categoryRes.ok || !sentimentRes.ok) {
-          throw new Error("Failed to fetch all necessary data.");
-        }
-
-        const interviewsData = await interviewsRes.json();
-        const insightsData = await insightsRes.json();
-        const categoryData = await categoryRes.json();
-        const sentimentData = await sentimentRes.json();
-
-        // --- THIS IS THE FIX ---
-        const sentimentColorMap: { [key: string]: string } = {
-        positive: '#198754', // Green
-        negative: '#DC3545', // Red
-        neutral: '#6C757D',  // Muted Grey
-        };
-
-        setSentimentCounts(sentimentData.map((d: any) => ({ 
-        name: d.sentiment, 
-        value: d.count,
-        // We are now adding the color directly to the data
-        color: sentimentColorMap[d.sentiment] || '#6C757D' 
-        })));
-        // --- END FIX ---
-
-        setInterviews(interviewsData);
-        setInsights(insightsData.insights || []); // Use insightsData.insights, fallback to empty array
-        setCategoryCounts(categoryData.map((d: any) => ({ name: d.category, value: d.count })));
-        setSentimentCounts(sentimentData.map((d: any) => ({ name: d.sentiment, value: d.count })));
-
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+      fetchAllData(session.access_token);
     };
+    getSession();
+  }, [projectId, router, filters, pagination.currentPage]);
 
-    if (projectId) {
-      fetchAllData();
+  const fetchAllData = async (token: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const query = new URLSearchParams({
+        page: pagination.currentPage.toString(),
+        limit: '10',
+        ...filters
+      }).toString();
+      
+      const [interviewsRes, insightsRes, categoryRes, sentimentRes] = await Promise.all([
+        fetch(`${API_URL}/interviews/${projectId}`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_URL}/insights/${projectId}?${query}`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_URL}/insights/${projectId}/category-counts`, { headers: { 'Authorization': `Bearer ${token}` } }),
+        fetch(`${API_URL}/insights/${projectId}/sentiment-counts`, { headers: { 'Authorization': `Bearer ${token}` } })
+      ]);
+      
+      if (!interviewsRes.ok || !insightsRes.ok || !categoryRes.ok || !sentimentRes.ok) {
+        throw new Error("Failed to fetch all necessary data.");
+      }
+      
+      const interviewsData = await interviewsRes.json();
+      const insightsData = await insightsRes.json();
+      const categoryData = await categoryRes.json();
+      const sentimentData = await sentimentRes.json();
+
+      setInterviews(interviewsData);
+      setInsights(insightsData.insights || []);
+      setPagination({
+        currentPage: insightsData.currentPage,
+        totalPages: insightsData.totalPages,
+      });
+      setCategoryCounts(categoryData.map((d: any) => ({ name: d.category, value: d.count })));
+      setSentimentCounts(sentimentData.map((d: any) => ({ name: d.sentiment, value: d.count })));
+
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [projectId, router]);
+  };
 
   const handleThematicAnalysis = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -134,30 +128,29 @@ export default function ResultsPage() {
     }
   };
 
+  const handleFilterChange = (filterName: string, value: string) => {
+    setFilters(prev => ({ ...prev, [filterName]: value === 'all' ? '' : value }));
+    setPagination(prev => ({...prev, currentPage: 1}));
+  };
+
   if (loading) return <p className="text-center mt-24">Loading Results...</p>;
   if (error) return <p className="text-center mt-24 text-destructive">{`Error: ${error}`}</p>;
 
   return (
     <main>
       <Link href="/dashboard" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Dashboard</Link>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-4xl font-bold text-foreground">User Research Insights</h1>
+          <h1 className="text-3xl font-bold text-foreground">User Research Insights</h1>
           <p className="text-base text-muted-foreground mt-1">Track and analyze feedback from your user research sessions.</p>
         </div>
-        <button
-          onClick={handleThematicAnalysis}
-          disabled={isAnalyzing || interviews.length < 2}
-          className="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground font-semibold rounded-lg shadow-sm hover:opacity-90 disabled:opacity-50"
-        >
-          <Cpu className="mr-2 h-5 w-5"/>
-          {isAnalyzing ? 'Finding Themes...' : 'Synthesize Themes'}
-        </button>
+        <Button onClick={handleThematicAnalysis} disabled={isAnalyzing || interviews.length < 1}>
+          <FiCpu className="mr-2 h-4 w-4"/>
+          {isAnalyzing ? 'Synthesizing...' : 'Synthesize Themes'}
+        </Button>
       </div>
-
-      <NavigationTabs />
-
-      <div className="space-y-12 mt-8">
+      
+      <div className="space-y-8 mt-8">
         <section id="overview">
           <StatsCards totalInsights={insights.length} totalInterviews={interviews.length} />
         </section>
@@ -176,6 +169,25 @@ export default function ResultsPage() {
           <div className="bg-card border border-border rounded-lg shadow-sm">
             <div className="p-6">
               <h2 className="text-2xl font-semibold text-foreground">Recent Insights</h2>
+              <div className="flex items-center space-x-4 my-4">
+                <Select onValueChange={(value) => handleFilterChange('category', value)}>
+                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Filter by Category" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="UI/UX">UI/UX</SelectItem>
+                    <SelectItem value="Performance">Performance</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select onValueChange={(value) => handleFilterChange('sentiment', value)}>
+                  <SelectTrigger className="w-[180px]"><SelectValue placeholder="Filter by Sentiment" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Sentiments</SelectItem>
+                    <SelectItem value="positive">Positive</SelectItem>
+                    <SelectItem value="negative">Negative</SelectItem>
+                    <SelectItem value="neutral">Neutral</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="mt-4 flow-root">
                 <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                   <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -188,7 +200,7 @@ export default function ResultsPage() {
                           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-foreground">Priority</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-border">
+                      <tbody className="divide-y divide-border bg-card">
                         {insights.map((insight: Insight) => (
                           <tr key={insight.id}>
                             <td className="whitespace-normal py-4 pl-4 pr-3 text-sm font-medium text-foreground sm:pl-0">{insight.insight_text}</td>
@@ -210,6 +222,29 @@ export default function ResultsPage() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-between border-t border-border pt-4 mt-4">
+                <span className="text-sm text-muted-foreground">
+                  Page {pagination.currentPage} of {pagination.totalPages}
+                </span>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => setPagination(p => ({...p, currentPage: p.currentPage - 1}))}
+                    disabled={pagination.currentPage <= 1}
+                  >
+                    Previous
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setPagination(p => ({...p, currentPage: p.currentPage + 1}))}
+                    disabled={pagination.currentPage >= pagination.totalPages}
+                  >
+                    Next
+                  </Button>
                 </div>
               </div>
             </div>
