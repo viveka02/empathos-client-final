@@ -139,7 +139,7 @@ export default function ResultsPage() {
 
   return (
     <main>
-      <Link href="/" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Dashboard</Link>
+      <Link href="/dashboard" className="text-sm text-accent hover:underline mb-6 inline-block">&larr; Back to Dashboard</Link>
       <div className="flex justify-between items-center mb-4">
         <div>
           <h1 className="text-4xl font-bold text-foreground">User Research Insights</h1>
